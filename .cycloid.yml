@@ -1,0 +1,46 @@
+# Configuration of Cycloid stack
+---
+version: '2'
+name: 'Compute'
+canonical: 'stack-compute'
+status: 'public'
+description: |
+  This stack allows to deploy a configure compute instance in one of the available providers.
+keywords:
+  - 'compute'
+  - 'vm'
+  - 'virtual machine'
+  - 'server'
+  - 'instance'
+  - 'provider:aws'
+  - 'ec2'
+  - 'provider:azure'
+  - 'provider:gcp'
+  - 'gce'
+author: 'Cycloid'
+image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-compute/master/docs/compute-icon.png'
+technologies:
+   - technology: AWS
+     version: n/a
+   - technology: Azure
+     version: n/a
+   - technology: GCP
+     version: n/a
+config:
+  # define the default environment for aws
+  aws-ec2:
+    name: 'aws-ec2'
+    description: 'Creates a configurable Amazon Elastic Compute Cloud (EC2) in a chosen VPC'
+    cloud_provider: aws
+    # Configuration of the CI pipeline
+    pipeline:
+      pipeline:
+        path: 'pipeline/aws/pipeline-ec2.yml'
+      variables:
+        path: 'pipeline/aws/variables.ec2.sample.yml'
+        destination: '($ project $)/pipeline/variables-($ environment $).yml'
+    # Configuration of terraform to setup the infrastructure
+    terraform:
+      ec2:
+        path: 'terraform/aws/vm.tf.sample'
+        destination: '($ project $)/terraform/($ environment $)/vm.tf'

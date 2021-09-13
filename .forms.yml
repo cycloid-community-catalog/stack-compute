@@ -1,0 +1,263 @@
+---
+aws-ec2:
+  pipeline:
+    Terraform:
+      - name: "AWS access key"
+        description: "Amazon AWS access key for Terraform."
+        key: aws_access_key
+        widget: cy_cred
+        type: string
+        default: "((aws.access_key))"
+      - name: "AWS secret key"
+        description: "Amazon AWS secret key for Terraform."
+        key: aws_secret_key
+        widget: cy_cred
+        type: string
+        default: "((aws.secret_key))"
+      - name: "Amazon AWS region"
+        description: "Amazon AWS region to use for Terraform."
+        key: aws_default_region
+        widget: auto_complete
+        type: string
+        values: ["eu-north-1","ap-south-1","eu-west-3","eu-west-2","eu-west-1","ap-northeast-2","ap-northeast-1","sa-east-1","ca-central-1","ap-southeast-1","ap-southeast-2","eu-central-1","us-east-1","us-east-2","us-west-1","us-west-2"]
+        default: eu-west-1
+      - name: "Terraform storage bucket"
+        description: "AWS S3 bucket name to store terraform remote state file."
+        key: terraform_storage_bucket_name
+        widget: simple_text
+        type: string
+        default: ($ organization_canonical $)-terraform-remote-state
+
+    Repos:
+      - name: "Config repository"
+        key: config_git_repository
+        type: string
+        widget: cy_crs
+        description: "Git repository URL containing the config of the stack."
+        default: "git@github.com:MyUser/config-ec2.git"
+        required: true
+      - name: "Config git key"
+        description: "SSH key pair to fetch the config Git repository."
+        key: config_git_private_key
+        type: string
+        widget: cy_cred
+        default: "((ssh_config.ssh_key))"
+        required: true
+      - name: "Config branch"
+        description: "Branch of the config Git repository."
+        key: config_git_branch
+        widget: cy_branch
+        type: string
+        description: "The branch used by the config repository"
+        source: config_git_repository
+        default: "master"
+        required: true
+
+  terraform:
+    os-image:
+      - name: "AMI enable most recent"
+        description: "If more than one result is returned, use the most recent AMI"
+        key: module.vm.ami_most_recent
+        widget: switch
+        type: boolean
+        default: true
+      - name: "AMI name"
+        description: "The name of the AMI."
+        key: module.vm.ami_name
+        widget: simple_text
+        type: string
+        default: "debian-stretch-*"
+        required: true
+      - name: "AMI virtualization type"
+        description: "The AMI virtualization type."
+        key: module.vm.ami_virtualisation_type
+        widget: radios
+        type: string
+        default: "hvm"
+        values:
+          - "hvm"
+          - "paravirtual"
+      - name: "AMI image architecture"
+        description: "The AMI image architecture"
+        key: module.vm.ami_architecture
+        widget: radios
+        type: string
+        default: "x86_64"
+        values:
+          - "x86_64"
+          - "i386"
+          - "arm64"
+      - name: "AMI type of root device volume"
+        description: "The AMI type of the root device volume."
+        key: module.vm.ami_root_device_type
+        widget: radios
+        type: string
+        default: "ebs"
+        values:
+          - "ebs"
+          - "instance-store"
+      - name: "AMI owners"
+        description: "The AMI owners, used to limit search."
+        key: module.vm.ami_owners
+        widget: auto_complete
+        type: string
+        default: "379101102735" #debian
+        required: true
+        values:
+          - "379101102735" #debian
+          - "amazon"
+          - "microsoft"
+          - "self"
+    instance:
+      - name: "Cloud init template file"
+        description: "The path and file name of the Cloud-init file to launch startup configuration in the vm. E.g.:($ project $)/terraform/($ environment $)/foo.sh.tpl -> foo.sh.tpl"
+        key: module.vm.template_file
+        widget: simple_text
+        type: string
+        default: "cloud-init.sh.tpl"
+      - name: "Vm type"
+        description: "Type of instance to use for the instance."
+        key: module.vm.instance_type
+        widget: auto_complete
+        type: string
+        default: "t2.micro"
+        required: true
+        values:
+          - "t2.nano"	
+          - "t2.micro"
+          - "t2.small"
+          - "t2.medium"
+          - "t2.large"
+          - "t2.xlarge"
+          - "t2.2xlarge"
+      - name: "Instance extra tags"
+        description: "Dict of extra tags to add to the vm instance."
+        key: module.vm.instance_extra_tags
+        widget: text_area
+        type: raw
+        default: "{}"
+    network:
+      - name: "Subnet ID"
+        description: "VPC Subnet ID to launch in."
+        key: module.vm.subnet_id
+        widget: simple_text
+        type: string
+        default: ""
+        required: true
+      - name: "Private IP"
+        description: "Private IP address to associate with the instance in a VPC."
+        key: module.vm.private_ip
+        widget: simple_text
+        type: string
+        default: ""
+      - name: "Associate public ip"
+        description: "Whether to associate a public IP address with an instance in a VPC."
+        key: module.vm.associate_public_ip_address
+        widget: switch
+        type: boolean
+        default: true
+    volume:
+      - name: "Enable volume deletion on vm termination"
+        description: "Whether the volume should be destroyed on instance termination."
+        key: module.vm.enable_vm_disk_delete_on_termination
+        widget: switch
+        type: boolean
+        default: true
+      - name: "Enable volume encryption"
+        description: "Whether to enable volume encryption."
+        key: module.vm.enable_vm_disk_encrypted
+        widget: switch
+        type: boolean
+        default: true
+      - name: "Volume Size"
+        description: "Size of the volume in gibibytes (GiB)."
+        key: module.vm.vm_disk_size
+        widget: slider_range
+        type: integer
+        default: 5
+        values:
+            - 0
+            - 256
+      - name: "Type of volume"
+        description: "The volume type to use."
+        key: module.vm.vm_disk_type
+        widget: radios
+        type: string
+        default: "gp2"
+        values: 
+          - "gp2"
+          - "gp3"
+          - "io1"
+          - "io2"
+          - "sc1"
+          - "st1"
+      - name: "EBS optimized"
+        description: "If true, the launched EC2 instance will be EBS-optimized."
+        key: module.vm.ebs_optimized
+        widget: switch
+        type: boolean
+        default: false
+      - name: "Volume extra tags"
+        description: "A map of tags to assign, at instance-creation time, to root and EBS volumes."
+        key: module.vm.volume_extra_tags
+        widget: text_area
+        type: raw
+        default: "{}"
+    security:  
+      - name: "Security group name"
+        description: " Name of the security group."
+        key: module.vm.sg_name
+        widget: simple_text
+        type: string
+        default: "" 
+      - name: "VPC id"
+        description: "VPC ID used to create the security group."
+        key: module.vm.vpc_id
+        widget: simple_text
+        type: string
+        default: "" 
+        required: true
+      - name: "Security group ingress rules"
+        description: "Configuration block for ingress rules."
+        key: module.vm.sg_ingress_rules 
+        widget: text_area
+        type: raw
+        default: |+
+          [
+            {
+                description      = "Accept ssh traffic"
+                from_port        = 22
+                to_port          = 22
+                protocol         = "tcp"
+                cidr_blocks      = ["0.0.0.0/0"]
+                ipv6_cidr_blocks = []
+                prefix_list_ids  = []
+                security_groups  = []
+                self             = true
+              }
+            ]
+      - name: "Security group egress rules"
+        description: "Configuration block for ingress rules."
+        key: module.vm.sg_egress_rules 
+        widget: text_area
+        type: raw
+        default: |+
+          [
+            {
+                description      = "Accept all egress"
+                from_port        = 0
+                to_port          = 0
+                protocol         = "-1"
+                cidr_blocks      = ["0.0.0.0/0"]
+                ipv6_cidr_blocks = []
+                prefix_list_ids  = []
+                security_groups  = []
+                self             = true
+              }
+            ]
+      - name: "Security group extra tags"
+        description: "Dict of extra tags to add to security group resources"
+        key: module.vm.sg_extra_tags
+        widget: text_area
+        type: raw
+        default: "{}"    
