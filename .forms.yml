@@ -261,3 +261,243 @@ aws-ec2:
         widget: text_area
         type: raw
         default: "{}"    
+
+gcp-gce:
+  pipeline:
+    Terraform:
+      - name: "GCP json credentials"
+        description: "GCP JSON for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)"
+        key: gcp_credentials_json
+        widget: cy_cred
+        type: string
+        default: "((gcp.json_key))"
+      - name: "GCP Project"
+        description: "Google Cloud Platform project to use for Terraform."
+        key: gcp_project
+        widget: simple_text
+        type: string
+        default: ($ organization_canonical $)
+      - name: "GCP region"
+        description: "Google Cloud Platform region to use for Terraform."
+        key: gcp_region
+        widget: auto_complete
+        type: string
+        values: ["europe-west1","europe-west2","europe-west3","europe-west4","europe-north1","europe-central2"]
+        default: europe-west1
+      - name: "GCP zone"
+        description: "Google Cloud Platform zone to use for Terraform."
+        key: gcp_zone
+        widget: auto_complete
+        type: string
+        values: ["europe-west1-b","europe-west1-c","europe-west1-d","europe-west4","europe-north1","europe-central2"]
+        default: europe-west1-b
+      - name: "Terraform storage bucket"
+        description: "Google Cloud Storage bucket name to store terraform remote state file."
+        key: terraform_storage_bucket_name
+        widget: simple_text
+        type: string
+        default: ($ organization_canonical $)-terraform-remote-state
+
+    Repos:
+      - name: "Config repository"
+        key: config_git_repository
+        type: string
+        widget: cy_crs
+        description: "Git repository URL containing the config of the stack."
+        default: "git@github.com:MyUser/config-gke.git"
+        required: true
+      - name: "Config git key"
+        description: "SSH key pair to fetch the config Git repository."
+        key: config_git_private_key
+        type: string
+        widget: cy_cred
+        default: "((ssh_config.ssh_key))"
+        required: true
+      - name: "Config branch"
+        description: "Branch of the config Git repository."
+        key: config_git_branch
+        widget: cy_branch
+        type: string
+        description: "The branch used by the config repository"
+        source: config_git_repository
+        default: "master"
+        required: true
+
+  terraform:
+    instance:
+      - name: "Instance Name"
+        description: "The unique name for the instance."
+        key: module.vm.instance_name
+        widget: simple_text
+        type: string
+        default: "${var.customer}-${var.project}-${var.env}-vm"
+        required: true
+      - name: "Enable update in stoped instance"
+        description: "Allows to stop the instance to update its properties."
+        key: module.vm.allow_stopping_for_update
+        widget: switch
+        type: boolean
+        default: true
+      - name: "Machine type"
+        description: "The machine type to create."
+        key: module.vm.machine_type
+        widget: auto_complete
+        type: string
+        default: "e2-small"
+        required: true
+        values:
+          - "e2-micro"	
+          - "e2-small"
+          - "e2-medium"
+          - "e2-standard-2"
+          - "e2-highmem-2"
+          - "e2-highcpu-2"   
+      - name: "Cloud init template file"
+        description: "The path and file name of the Cloud-init file to launch startup configuration in the vm. E.g.:($ project $)/terraform/($ environment $)/foo.sh.tpl -> foo.sh.tpl"
+        key: module.vm.template_file
+        widget: simple_text
+        type: string
+        default: "cloud-init.sh.tpl"
+      - name: "A list of network tags to attach to the instance."
+        description: "The IP protocol to which the egress deny rule applies.An otional list of IP ports to which the ingress allow rule applies."
+        key: module.vm.instance_tags
+        widget: text_area
+        type: raw
+        default: |+
+          ["${var.customer}-${var.project}-${var.env}-network-tag"]
+      - name: "Instance extra tags"
+        description: "A map of key/value label pairs to assign to the instance."
+        key: module.vm.instance_extra_labels
+        widget: text_area
+        type: raw
+        default: "{}"
+    network:
+      - name: "Network ID"
+        description: "The name or self_link of the network to attach this interface to."
+        key: module.vm.network
+        widget: simple_text
+        type: string
+        default: ""
+        required: true
+      - name: "Private IP"
+        description: "The private IP address to assign to the instance."
+        key: module.vm.network_ip
+        widget: simple_text
+        type: string
+        default: ""  
+    boot-disk:
+      - name: "Enables auto disk deletion"
+        description: "Enables disk deletion when the instance is deleted."
+        key: module.vm.boot_disk_auto_delete 
+        widget: switch
+        type: boolean
+        default: true
+      - name: "Boot disk device name"
+        description: "Name with which attached disk will be accessible, as /dev/disk/by-id/google-{{device_name}}."
+        key: module.vm.boot_disk_device_name
+        widget: simple_text
+        type: string
+        default: ""
+      - name: "Boot disk image"
+        description: "The image from which to initialize this disk."
+        key: module.vm.boot_disk_image
+        widget: simple_text
+        type: string
+        default: "debian-cloud/debian-10"
+      - name: "Boot disk size"
+        description: "The size of the image in gigabytes."
+        key: module.vm.boot_disk_size
+        widget: number
+        type: integer
+        default: 5
+      - name: "Boot disk type"
+        description: "The GCE disk type"
+        key: module.vm.boot_disk_type
+        widget: radios
+        type: string
+        default: "pd-standard"
+        values:
+          - "pd-standard"
+          - "pd-balanced"
+          - "pd-ssd"
+    firewall-ingress:
+      - name: "Firewall Ingress Name"
+        description: "Name of the firewall ingress resource."
+        key: module.vm.ingress_firewall_name
+        widget: simple_text
+        type: string
+        default: "${var.customer}-${var.project}-${var.env}-ingress"
+      - name: "Disable Firewall ingress"
+        description: "Denotes whether the firewall ingress rule is disabled."
+        key: module.vm.ingress_disabled 
+        widget: switch
+        type: boolean
+        default: false
+      - name: "Firewall Ingress Source Ranges"
+        description: "If specified the firewall will only be applied to the source IP address in these ranges."
+        key: module.vm.ingress_source_ranges 
+        widget: text_area
+        type: raw
+        default: |+
+          []
+      - name: "Firewall Ingress Source Tags"
+        description: "If source tags are specified, the firewall will apply only to traffic with source IP that belongs to a tag listed in source tags. "
+        key: module.vm.ingress_source_tags 
+        widget: text_area
+        type: raw
+        default:  |+ 
+          []
+      - name: "Firewall Ingress IP protocol - allow rule"
+        description: "The IP protocol to which the ingress allow rule applies. Allowed values - tcp, udp, icmp, esp, ah, sctp, ipip, all or protocol number"
+        key: module.vm.ingress_allow_protocol
+        widget: simple_text
+        type: string
+        default: "tcp"
+      - name: "Firewall Ingress IP ports - allow rule"
+        description: "The IP protocol to which the ingress allow rule applies.An otional list of IP ports to which the ingress allow rule applies."
+        key: module.vm.ingress_allow_ports
+        widget: text_area
+        type: raw
+        default: |+ 
+          ["22"]
+          
+    firewall-egress:
+      - name: "Firewall Egress Name"
+        description: "Name of the firewall egress resource."
+        key: module.vm.egress_firewall_name
+        widget: simple_text
+        type: string
+        default: ""
+      - name: "Disable Firewall egress"
+        description: "Denotes whether the firewall egress rule is disabled."
+        key: module.vm.egress_disabled 
+        widget: switch
+        type: boolean
+        default: true
+      - name: "Firewall Egress Source Ranges"
+        description: "If specified the firewall will only be applied to the source IP address in these ranges."
+        key: module.vm.egress_source_ranges 
+        widget: text_area
+        type: raw
+        default: |+
+          []
+      - name: "Firewall Egress Source Tags"
+        description: "If source tags are specified, the firewall will apply only to traffic with source IP that belongs to a tag listed in source tags. "
+        key: module.vm.egress_source_tags 
+        widget: text_area
+        type: raw
+        default: |+
+          []
+      - name: "Firewall Egress IP protocol - allow rule"
+        description: "The IP protocol to which the egress allow rule applies. Allowed values - tcp, udp, icmp, esp, ah, sctp, ipip, all or protocol number"
+        key: module.vm.egress_allow_protocol
+        widget: simple_text
+        type: string
+        default: ""
+      - name: "Firewall Egress IP ports - allow rule"
+        description: "The IP protocol to which the egress allow rule applies.An otional list of IP ports to which the ingress allow rule applies."
+        key: module.vm.egress_allow_ports
+        widget: text_area
+        type: raw
+        default: |+
+          []

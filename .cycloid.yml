@@ -18,7 +18,7 @@ keywords:
   - 'provider:gcp'
   - 'gce'
 author: 'Cycloid'
-image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-compute/master/docs/compute-icon.png'
+image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-compute/aws-marco/docs/icon.png'
 technologies:
    - technology: AWS
      version: n/a
@@ -43,4 +43,22 @@ config:
     terraform:
       ec2:
         path: 'terraform/aws/vm.tf.sample'
+        destination: '($ project $)/terraform/($ environment $)/vm.tf'
+
+  # define the default environment for gcp
+  gcp-gce:
+    name: 'gcp-gce'
+    description: 'Creates a configurable Google Compute Engine (GCE) in a chosen VPC'
+    cloud_provider: google
+    # Configuration of the CI pipeline
+    pipeline:
+      pipeline:
+        path: 'pipeline/gcp/pipeline-gce.yml'
+      variables:
+        path: 'pipeline/gcp/variables.gce.sample.yml'
+        destination: '($ project $)/pipeline/variables-($ environment $).yml'
+    # Configuration of terraform to setup the infrastructure
+    terraform:
+      ec2:
+        path: 'terraform/gcp/vm.tf.sample'
         destination: '($ project $)/terraform/($ environment $)/vm.tf'
