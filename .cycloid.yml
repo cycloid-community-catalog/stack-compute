@@ -18,7 +18,7 @@ keywords:
   - 'provider:gcp'
   - 'gce'
 author: 'Cycloid'
-image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-compute/aws-marco/docs/icon.png'
+image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-compute/master/docs/icon.png'
 technologies:
    - technology: AWS
      version: n/a
@@ -41,8 +41,26 @@ config:
         destination: '($ project $)/pipeline/variables-($ environment $).yml'
     # Configuration of terraform to setup the infrastructure
     terraform:
-      ec2:
+      aws-ec2:
         path: 'terraform/aws/vm.tf.sample'
+        destination: '($ project $)/terraform/($ environment $)/vm.tf'
+        
+  # define the default environment for azure
+  azure-linux:
+    name: 'azure-linux'
+    description: 'Creates a configurable Azure Linux Virtual Machine in a chosen VPC'
+    cloud_provider: azurerm
+    # Configuration of the CI pipeline
+    pipeline:
+      pipeline:
+        path: 'pipeline/azure/pipeline-vm.yml'
+      variables:
+        path: 'pipeline/azure/variables.vm.sample.yml'
+        destination: '($ project $)/pipeline/variables-($ environment $).yml'
+    # Configuration of terraform to setup the infrastructure
+    terraform:
+      azure-linux:
+        path: 'terraform/azure/vm.tf.sample'
         destination: '($ project $)/terraform/($ environment $)/vm.tf'
 
   # define the default environment for gcp
@@ -59,6 +77,6 @@ config:
         destination: '($ project $)/pipeline/variables-($ environment $).yml'
     # Configuration of terraform to setup the infrastructure
     terraform:
-      ec2:
+      gcp-gce:
         path: 'terraform/gcp/vm.tf.sample'
         destination: '($ project $)/terraform/($ environment $)/vm.tf'
