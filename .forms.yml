@@ -663,12 +663,12 @@ azure-linux:
           - "Standard_DS1_v2"	
           - "Standard_DS12_v2"
           - "Standard_DS13_v2"
-      - name: "Cloud init template file"
-        description: "The path and file name of the Cloud-init file to launch startup configuration in the vm. E.g.:($ project $)/terraform/($ environment $)/foo.sh.tpl -> foo.sh.tpl"
-        key: module.vm.template_file
-        widget: simple_text
+      - name: "Cloud init file content"
+        description: "The content of the file to use if cloud init is used."
+        key: module.vm.file_content
+        widget: text_area
         type: string
-        default: "cloud-init.sh.tpl"
+        default: ""
       - name: "OS Computer Name"
         description: "Specifies the name of the Virtual Machine."
         key: module.vm.os_computer_name

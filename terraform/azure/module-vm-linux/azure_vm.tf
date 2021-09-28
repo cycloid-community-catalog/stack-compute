@@ -64,7 +64,10 @@ resource "azurerm_network_interface_security_group_association" "vm_sg_assocatio
 ###
 
 data "template_file" "user_data" {
-  template = file(var.template_file)
+  template = file("${path.module}/cloud-init.sh.tpl")
+  vars = {
+    file_content  = var.file_content
+  }
 }
 
 
