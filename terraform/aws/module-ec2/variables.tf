@@ -49,8 +49,8 @@ variable "ami_owners" {
 ###
 # Cloud init template
 ###
-variable "template_file" {
-  description = "The path and file name of the Cloud-init file to launch startup configuration in the vm."
+variable "file_content" {
+  description = "The content of the file to use if cloud init is used."
 }
 
 ###

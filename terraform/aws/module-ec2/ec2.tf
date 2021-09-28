@@ -34,7 +34,10 @@ data "aws_ami" "vm" {
 ###
 
 data "template_file" "user_data" {
-  template = file(var.template_file)
+  template = file("${path.module}/cloud-init.sh.tpl")
+  vars = {
+    file_content  = var.file_content
+  }
 }
 
 

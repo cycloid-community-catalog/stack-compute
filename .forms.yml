@@ -109,12 +109,12 @@ aws-ec2:
           - "microsoft"
           - "self"
     instance:
-      - name: "Cloud init template file"
-        description: "The path and file name of the Cloud-init file to launch startup configuration in the vm. E.g.:($ project $)/terraform/($ environment $)/foo.sh.tpl -> foo.sh.tpl"
-        key: module.vm.template_file
-        widget: simple_text
+      - name: "Cloud init file content"
+        description: "The content of the file to use if cloud init is used."
+        key: module.vm.file_content
+        widget: text_area
         type: string
-        default: "cloud-init.sh.tpl"
+        default: ""
       - name: "Vm type"
         description: "Type of instance to use for the instance."
         key: module.vm.instance_type

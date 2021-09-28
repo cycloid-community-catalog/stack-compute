@@ -40,9 +40,9 @@ module "vm" {
   ###
   # Cloud init template
   ###
-  #. template_file (optional, string):
-  #+ The path and file name of the Cloud-init file to launch startup configuration in the vm.
-  template_file = "cloud-init.sh.tpl"
+  #. file_content (optional, string):
+  #+ The content of the file to use if cloud init is used.
+  file_content = ""
   
   ###
   # Security Group
