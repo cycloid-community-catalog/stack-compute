@@ -352,12 +352,12 @@ gcp-gce:
           - "e2-standard-2"
           - "e2-highmem-2"
           - "e2-highcpu-2"   
-      - name: "Cloud init template file"
-        description: "The path and file name of the Cloud-init file to launch startup configuration in the vm. E.g.:($ project $)/terraform/($ environment $)/foo.sh.tpl -> foo.sh.tpl"
-        key: module.vm.template_file
-        widget: simple_text
+      - name: "Cloud init file content"
+        description: "The content of the file to use if cloud init is used."
+        key: module.vm.file_content
+        widget: text_area
         type: string
-        default: "cloud-init.sh.tpl"
+        default: ""
       - name: "A list of network tags to attach to the instance."
         description: "The IP protocol to which the egress deny rule applies.An otional list of IP ports to which the ingress allow rule applies."
         key: module.vm.instance_tags
