@@ -53,7 +53,7 @@ In order to run this task, couple elements are required :
 |`instance_name`|Specifies the name of the Virtual Machine.|`string`|``|`False`|
 |`resource_group_name`|The name of the resource group to use for the creation of resources.|`string`|``|`True`|
 |`vm_size`|Specifies the size of the Virtual Machine.|`string`|``|`True`|
-|`template_file`|The path and file name of the Cloud-init file to launch startup configuration in the vm.|`string`|``|`False`|
+|`file_content`|The content of the file to use if cloud init is used.|`string`|``|`False`|
 |`os_admin_password`|The password associated with the local admin account. Must be [6-72] and contain uppercase + lowercase + number + special caracter|`string`|``|`True`|
 |`os_admin_username`|Specifies the name of the local admin account.|`string`|``|`True`|
 |`os_computer_name`|Specifies the name of the Virtual Machine.|`string`|``|`True`|

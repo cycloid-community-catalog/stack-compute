@@ -47,7 +47,7 @@ In order to run this task, couple elements are required :
 Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`instance_type`|The instance type to use for the instance. "|`string`|``|`True`|
-|`template_file`|The path and file name of the Cloud-init file to launch startup configuration in the vm.|`string`|``|`False`|
+|`file_content`|The content of the file to use if cloud init is used.|`string`|``|`False`|
 |`instance_extra_tags`|A map of tags to assign to the resource.|`-`|``|`False`|
 
 **Network Configurations**

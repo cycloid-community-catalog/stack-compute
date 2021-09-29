@@ -36,7 +36,7 @@ In order to run this task, couple elements are required :
 |---|---|:---:|:---:|:---:|
 |`instance_name`|The unique name for the instance.|`string`|``|`True`|
 |`machine_type`|The machine type to create.|`string`|``|`True`|
-|`template_file`|The path and file name of the Cloud-init file to launch startup configuration in the vm.|`string`|``|`False`|
+|`file_content`|The content of the file to use if cloud init is used.|`string`|``|`False`|
 |`instance_tags`|A list of network tags to attach to the instance.|`array`|``|`False`|
 |`allow_stopping_for_update`|Allows to stop the instance to update its properties.|`bool`|``|`False`|
 |`instance_extra_labels`|A map of key/value label pairs to assign to the instance.|`-`|``|`False`|
