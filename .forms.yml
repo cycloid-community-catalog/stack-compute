@@ -28,31 +28,6 @@ aws-ec2:
         type: string
         default: ($ .organization_canonical $)-terraform-remote-state
 
-    Repos:
-      - name: "Config repository"
-        key: config_git_repository
-        type: string
-        widget: cy_crs
-        description: "Git repository URL containing the config of the stack."
-        default: "git@github.com:MyUser/config-ec2.git"
-        required: true
-      - name: "Config git key"
-        description: "SSH key pair to fetch the config Git repository."
-        key: config_git_private_key
-        type: string
-        widget: cy_cred
-        default: "((ssh_config.ssh_key))"
-        required: true
-      - name: "Config branch"
-        description: "Branch of the config Git repository."
-        key: config_git_branch
-        widget: cy_branch
-        type: string
-        description: "The branch used by the config repository"
-        source: config_git_repository
-        default: "master"
-        required: true
-
   terraform:
     os-image:
       - name: "AMI enable most recent"
@@ -303,31 +278,6 @@ gcp-gce:
         widget: simple_text
         type: string
         default: ($ .organization_canonical $)-terraform-remote-state
-
-    Repos:
-      - name: "Config repository"
-        key: config_git_repository
-        type: string
-        widget: cy_crs
-        description: "Git repository URL containing the config of the stack."
-        default: "git@github.com:MyUser/config-gke.git"
-        required: true
-      - name: "Config git key"
-        description: "SSH key pair to fetch the config Git repository."
-        key: config_git_private_key
-        type: string
-        widget: cy_cred
-        default: "((ssh_config.ssh_key))"
-        required: true
-      - name: "Config branch"
-        description: "Branch of the config Git repository."
-        key: config_git_branch
-        widget: cy_branch
-        type: string
-        description: "The branch used by the config repository"
-        source: config_git_repository
-        default: "master"
-        required: true
 
   terraform:
     instance:
