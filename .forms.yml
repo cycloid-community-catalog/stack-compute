@@ -72,17 +72,26 @@ aws-ec2:
           - "ebs"
           - "instance-store"
       - name: "AMI owners"
-        description: "The AMI owners, used to limit search."
+        description: |
+          The AMI owners, used to limit search.
+          ```
+          379101102735 # old debian
+          136693071363 # debian10 & debian11
+          125523088429 # centos
+          099720109477 # Ubuntu
+          309956199498 # RHEL9 ami-013d87f7217614e10
+          ```
         key: module.vm.ami_owners
-        widget: auto_complete
-        type: string
-        default: "379101102735" #debian
+        widget: text_area
+        type: array
         required: true
         values:
-          - "379101102735" #debian
-          - "amazon"
-          - "microsoft"
-          - "self"
+          - "379101102735"
+          - "136693071363"
+          - "125523088429"
+          - "099720109477"
+          - "309956199498"
+
     instance:
       - name: "Cloud init file content"
         description: "The content of the file to use if cloud init is used."
