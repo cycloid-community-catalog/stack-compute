@@ -26,7 +26,7 @@ aws-ec2:
         key: terraform_storage_bucket_name
         widget: simple_text
         type: string
-        default: ($ organization_canonical $)-terraform-remote-state
+        default: ($ .organization_canonical $)-terraform-remote-state
 
     Repos:
       - name: "Config repository"
@@ -282,7 +282,7 @@ gcp-gce:
         key: gcp_project
         widget: simple_text
         type: string
-        default: ($ organization_canonical $)
+        default: ($ .organization_canonical $)
       - name: "GCP region"
         description: "Google Cloud Platform region to use for Terraform."
         key: gcp_region
@@ -302,7 +302,7 @@ gcp-gce:
         key: terraform_storage_bucket_name
         widget: simple_text
         type: string
-        default: ($ organization_canonical $)-terraform-remote-state
+        default: ($ .organization_canonical $)-terraform-remote-state
 
     Repos:
       - name: "Config repository"
@@ -558,7 +558,7 @@ azure-linux:
         key: terraform_resource_group_name
         widget: simple_text
         type: string
-        default: ($ organization_canonical $)-terraform
+        default: ($ .organization_canonical $)-terraform
       - name: "Azure Storage Account name"
         description: "Azure Storage Account name to use to store terraform remote state file."
         key: terraform_storage_account_name
@@ -576,13 +576,13 @@ azure-linux:
         key: terraform_storage_container_name
         widget: simple_text
         type: string
-        default: ($ organization_canonical $)
+        default: ($ .organization_canonical $)
       - name: "Azure Storage container path"
         description: "Azure Storage container path to store terraform remote state file."
         key: terraform_storage_container_path
         widget: simple_text
         type: string
-        default: ($ project $)/($ environment $)
+        default: ($ .project $)/($ .environment $)
       - name: "OS Admin Password"
         description: "The password associated with the local admin account. Must be [6-72] and contain uppercase + lowercase + number + special caracter"
         key: os_admin_password
