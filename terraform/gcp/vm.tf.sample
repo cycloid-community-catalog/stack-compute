@@ -3,9 +3,10 @@ module "vm" {
   # Do not modify the following lines #
   source = "./module-gce"
 
-  project  = var.project
-  env      = var.env
-  customer = var.customer
+  component = var.component
+  env       = var.env
+  project   = var.project
+  org       = var.org
 
   #####################################
 
@@ -17,7 +18,7 @@ module "vm" {
 
   #. ingress_firewall_name (optional, string):
   #+ Name of the firewall ingress resource.
-  ingress_firewall_name = "${var.customer}-${var.project}-${var.env}-ingress"
+  ingress_firewall_name = "${var.org}-${var.project}-${var.env}-${var.component}-ingress"
 
   #. ingress_disabled (optional, bool):
   #+ Denotes whether the firewall ingress rule is disabled.
@@ -43,7 +44,7 @@ module "vm" {
 
   #. egress_firewall_name (optional, string):
   #+ Name of the firewall egress resource.
-  egress_firewall_name = "${var.customer}-${var.project}-${var.env}-egress"
+  egress_firewall_name = "${var.org}-${var.project}-${var.env}-${var.component}-egress"
 
   #. egress_disabled (optional, bool):
   #+ Denotes whether the firewall egress rule is disabled.
@@ -78,7 +79,7 @@ module "vm" {
 
   #. instance_name (required, string):
   #+ The unique name for the instance.
-  instance_name = "${var.customer}-${var.project}-${var.env}-vm"
+  instance_name = "${var.org}-${var.project}-${var.env}-${var.component}-vm"
 
   #. machine_type (required, string):
   #+ The machine type to create.
@@ -92,7 +93,7 @@ module "vm" {
 
   #. instance_tags (optional, array):
   #+ A list of network tags to attach to the instance.
-  instance_tags = ["${var.customer}-${var.project}-${var.env}-network-tag"]
+  instance_tags = ["${var.org}-${var.project}-${var.env}-${var.component}-network-tag"]
 
 
   # VM - storage
@@ -143,7 +144,7 @@ module "vm" {
 ## Please copy the next section of code into a separate .tf file in the config branch of your stack
 
 #resource "google_compute_firewall" "extra" {
-#  name        = "${var.customer}-${var.project}-${var.env}-extra"
+#  name        = "${var.org}-${var.project}-${var.env}-${var.component}-extra"
 #  network     = var.network
 #  description = "Firewall description"
 #  direction   = ...      # (Optional) "EGRESS" or "INGRESS"

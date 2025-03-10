@@ -3,9 +3,10 @@ module "vm" {
   # Do not modify the following lines #
   source = "./module-ec2"
 
-  project  = var.project
-  env      = var.env
-  customer = var.customer
+  component = var.component
+  project   = var.project
+  env       = var.env
+  org       = var.org
 
   #####################################
 
@@ -58,19 +59,19 @@ module "vm" {
 
   #. sg_egress_rules (optional, array):
   #+ Configuration block for egress rules.
-  sg_egress_rules =  [
-      {
-        description      = "Accept all egress"
-        from_port        = 0
-        to_port          = 0
-        protocol         = "-1"
-        cidr_blocks      = ["0.0.0.0/0"]
-        ipv6_cidr_blocks = []
-        prefix_list_ids  = []
-        security_groups  = []
-        self             = true
-        }
-    ]
+  sg_egress_rules = [
+    {
+      description      = "Accept all egress"
+      from_port        = 0
+      to_port          = 0
+      protocol         = "-1"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = []
+      self             = true
+    }
+  ]
 
   #. sg_extra_tags (optional):
   #+ Map of extra tags to assign to the security group.
@@ -86,11 +87,11 @@ module "vm" {
 
   #. instance_extra_tags (optional):
   #+ A map of tags to assign to the resource.
-  instance_extra_tags =  {}
+  instance_extra_tags = {}
 
   #. key_name (optional, string):
   #+ Key name of the Key Pair to use for the instance
-  key_name =  ""
+  key_name = ""
 
   ## EC2-Network
 

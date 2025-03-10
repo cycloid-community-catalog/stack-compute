@@ -35,7 +35,7 @@ use_cases:
         key: terraform_storage_bucket_name
         widget: simple_text
         type: string
-        default: ($ .organization_canonical $)-terraform-remote-state
+        default: ($ .org $)-terraform-remote-state
 
   - name: Instance
     groups:
@@ -283,7 +283,7 @@ use_cases:
         key: gcp_project
         widget: simple_text
         type: string
-        default: ($ .organization_canonical $)
+        default: ($ .org $)
       - name: "GCP region"
         description: "Google Cloud Platform region to use for Terraform."
         key: gcp_region
@@ -303,7 +303,7 @@ use_cases:
         key: terraform_storage_bucket_name
         widget: simple_text
         type: string
-        default: ($ .organization_canonical $)-terraform-remote-state
+        default: ($ .org $)-terraform-remote-state
 
   - name: Instance
     groups:
@@ -315,7 +315,7 @@ use_cases:
         key: module.vm.instance_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-vm"
+        default: '($ list .org .project .env .component | join "-" $)-vm'
         required: true
       - name: "Enable update in stoped instance"
         description: "Allows to stop the instance to update its properties."
@@ -349,7 +349,7 @@ use_cases:
         widget: text_area
         type: array
         default:
-          - "${var.customer}-${var.project}-${var.env}-network-tag"
+          - "($ list .org .project .env .component | join "-" $)-network-tag"
       - name: "Instance extra tags"
         description: "A map of key/value label pairs to assign to the instance."
         key: module.vm.instance_extra_labels
@@ -419,7 +419,7 @@ use_cases:
         key: module.vm.ingress_firewall_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-ingress"
+        default: '($ list .org .project .env .component | join "-" $)-ingress'
       - name: "Disable Firewall ingress"
         description: "Denotes whether the firewall ingress rule is disabled."
         key: module.vm.ingress_disabled
@@ -628,7 +628,7 @@ use_cases:
         key: module.vm.instance_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-vm"
+        default: '($ list .org .project .env .component | join "-" $)-vm'
       - name: "Resource Group Name"
         description: "The name of the resource group to use for the creation of resources."
         key: module.vm.resource_group_name
@@ -687,19 +687,19 @@ use_cases:
         key: module.vm.network_interface_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-nic"
+        default: '($ list .org .project .env .component | join "-" $)-nic'
       - name: "Public IP Name"
         description: "Specifies the name of the Public IP resource."
         key: module.vm.public_ip_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-public_ip"
+        default: '($ list .org .project .env .component | join "-" $)-public_ip'
       - name: "IP Config Name"
         description: "A name used for the IP Configuration in the network interface."
         key: module.vm.ip_config_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-ip_config"
+        default: '($ list .org .project .env .component | join "-" $)-ip_config'
       - name: "Subnet ID"
         description: "The ID of the Subnet where this Network Interface should be located in."
         key: module.vm.subnet_id
@@ -720,7 +720,7 @@ use_cases:
         key: module.vm.disk_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-disk"
+        default: '($ list .org .project .env .component | join "-" $)-disk'
       - name: "OS Managed Disk type"
         description: "Specifies whether network traffic is allowed or denied by default rule."
         key: module.vm.disk_managed_type
@@ -753,7 +753,7 @@ use_cases:
         key: module.vm.network_security_group_name
         widget: simple_text
         type: string
-        default: "${var.customer}-${var.project}-${var.env}-sg"
+        default: '($ list .org .project .env .component | join "-" $)-sg'
       - name: "Default security rule name"
         description: "The name of the default security rule."
         key: module.vm.security_rule_name

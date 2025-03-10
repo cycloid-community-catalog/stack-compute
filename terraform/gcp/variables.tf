@@ -1,4 +1,8 @@
 # Cycloid requirements
+variable "component" {
+  description = "Cycloid component canonical."
+}
+
 variable "project" {
   description = "Cycloid project name."
 }

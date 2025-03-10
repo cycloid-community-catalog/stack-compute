@@ -3,9 +3,10 @@ module "vm" {
   # Do not modify the following lines #
   source = "./module-vm-linux"
 
-  project  = var.project
-  env      = var.env
-  customer = var.customer
+  component = var.component
+  env       = var.env
+  project   = var.project
+  org       = var.org
 
   #####################################
 
@@ -15,15 +16,15 @@ module "vm" {
 
   #. network_interface_name (optional, string):
   #+ The name of the Network Interface.
-  network_interface_name = "${var.customer}-${var.project}-${var.env}-nic"
+  network_interface_name = "${var.org}-${var.project}-${var.env}-${var.component}-nic"
 
   #. public_ip_name (optional, string):
   #+ Specifies the name of the Public IP resource.
-  public_ip_name = "${var.customer}-${var.project}-${var.env}-public_ip"
+  public_ip_name = "${var.org}-${var.project}-${var.env}-${var.component}-public_ip"
 
   #. ip_config_name (optional, string):
   #+ A name used for the IP Configuration in the network interface.
-  ip_config_name = "${var.customer}-${var.project}-${var.env}-ip_config"
+  ip_config_name = "${var.org}-${var.project}-${var.env}-${var.component}-ip_config"
 
   #. subnet_id (optional, string):
   #+ The ID of the Subnet where this Network Interface should be located in.
@@ -39,7 +40,7 @@ module "vm" {
 
   #. network_security_group_name (optional, string):
   #+ Specifies the name of the Application Security Group.
-  network_security_group_name = "${var.customer}-${var.project}-${var.env}-sg"
+  network_security_group_name = "${var.org}-${var.project}-${var.env}-${var.component}-sg"
 
   #. security_rule_name (required, string):
   #+ The name of the default security rule.
@@ -100,7 +101,7 @@ module "vm" {
 
   #. instance_name (optional, string):
   #+ Specifies the name of the Virtual Machine.
-  instance_name = "${var.customer}-${var.project}-${var.env}-vm"
+  instance_name = "${var.org}-${var.project}-${var.env}-${var.component}-vm"
 
   #. azure_location (required, string):
   #+ Specifies the supported Azure location where the resources exist.
@@ -165,7 +166,7 @@ module "vm" {
 
   #. disk_name (optional, string):
   #+ Specifies the name of the OS Disk.
-  disk_name = "${var.customer}-${var.project}-${var.env}-disk"
+  disk_name = "${var.org}-${var.project}-${var.env}-${var.component}-disk"
 
   #. disk_managed_type (optional, string):
   #+ Specifies the type of Managed Disk which should be created.
@@ -185,7 +186,7 @@ module "vm" {
 
 # a) Creates an extra volume
 #resource "azurerm_managed_disk" "extra" {
-#  name                 = "${var.customer}-${var.project}-${var.env}-extra-disk"
+#  name                 = "${var.org}-${var.project}-${var.env}-${var.component}-extra-disk"
 #  location             = var.azure_location
 #  resource_group_name  = module.vm.resource_group_name
 #  storage_account_type = "Standard_LRS"   # Available options:  Standard_LRS, StandardSSD_ZRS, Premium_LRS, Premium_ZRS, StandardSSD_LRS or UltraSSD_LRS

@@ -26,7 +26,6 @@ shared:
 ($- end $)
 
 groups:
-
 - name: overview
   jobs:
   - terraform-plan
@@ -37,25 +36,24 @@ groups:
   - terraform-destroy
 
 resource_types:
-
 - name: terraform
-  type: docker-image
+  type: registry-image
   source:
     repository: ljfranklin/terraform-resource
     tag: ((terraform_version))
 
 resources:
-
 - name: tfstate
   type: terraform
   icon: terraform
   source:
-    env_name: ($ .environment $)
+    env_name: ($ .env $)
+($- $tfPrefix := .project .env .component | join "-" $)
 ($- if eq .use_case "aws-ec2" $)
     backend_type: s3
     backend_config:
       bucket: ((terraform_storage_bucket_name))
-      key: ($ .project $)-($ .environment $).tfstate
+      key: ($ $tfPrefix $).tfstate
       workspace_key_prefix: ($ .project $)
       region: ((aws_default_region))
       access_key: ((aws_access_key))
@@ -64,9 +62,10 @@ resources:
       access_key: ((aws_access_key))
       secret_key: ((aws_secret_key))
       aws_region: ((aws_default_region))
-      env: ($ .environment $)
+      component: ($ .component $)
+      env: ($ .env $)
       project: ($ .project $)
-      customer: ($ .organization_canonical $)
+      org: ($ .org $)
     env:
       AWS_ACCESS_KEY_ID: ((aws_access_key))
       AWS_DEFAULT_REGION: ((aws_default_region))
@@ -75,7 +74,7 @@ resources:
     backend_type: azurerm
     backend_config:
       container_name: ((terraform_storage_container_name))
-      key: ((terraform_storage_container_path))/((project))-((env)).tfstate
+      key: ((terraform_storage_container_path))/($ $tfPrefix $).tfstate
       resource_group_name: ((terraform_resource_group_name))
       storage_account_name: ((terraform_storage_account_name))
       access_key: ((terraform_storage_access_key))
@@ -87,9 +86,10 @@ resources:
       azure_subscription_id: ((azure_subscription_id))
       azure_tenant_id: ((azure_tenant_id))
       os_admin_password: ((os_admin_password))
-      env: ($ .environment $)
+      component: ($ .component $)
+      env: ($ .env $)
       project: ($ .project $)
-      customer: ($ .organization_canonical $)
+      org: ($ .org $)
     env:
       ARM_CLIENT_ID: ((azure_client_id))
     	ARM_CLIENT_SECRET: ((azure_client_secret))
@@ -99,14 +99,15 @@ resources:
     backend_type: gcs
     backend_config:
       bucket: ((terraform_storage_bucket_name))
-      prefix: ((project))/((env))
+      prefix: ($ .org $)/($ .project $)/($ .env $)
       credentials: ((gcp_credentials_json))
     vars:
       gcp_project: ((gcp_project))
       gcp_region: ((gcp_region))
-      env: ($ .environment $)
+      component: ($ .component $)
+      env: ($ .env $)
       project: ($ .project $)
-      customer: ($ .organization_canonical $)
+      org: ($ .org $)
     env:
       GOOGLE_PROJECT: ((gcp_project))
       GOOGLE_REGION: ((gcp_region))
@@ -119,8 +120,8 @@ resources:
   type: git
   icon: git
   source:
-    uri: https://github.com/cycloid-community-catalog/stack-compute.git
-    branch: ($ .scs_branch $)
+    uri: "https://github.com/cycloid-community-catalog/stack-compute.git"
+    branch: ($ .catalog_repository_branch $)
     paths:
       - terraform/($ $stack_path $)/*
 
@@ -129,47 +130,46 @@ resources:
   type: git
   icon: git
   source:
-    uri: ($ .cr_url $)
-    branch: ($ .cr_branch $)
-    ($- if eq .cr_cred_type "basic_auth" $)
-    username: ((($ .cr_cred_path $).username))
-    password: ((($ .cr_cred_path $).password))
+    uri: ($ .config_repository_url $)
+    branch: ($ .config_repository_branch $)
+    ($- if eq .config_repository_cred_type "basic_auth" $)
+    username: ((($ .config_repository_cred_path $).username))
+    password: ((($ .config_repository_cred_path $).password))
     ($- else $)
-    private_key: ((($ .cr_cred_path $).ssh_key))
+    private_key: ((($ .config_repository_cred_path $).ssh_key))
     ($- end $)
     paths:
-      - ($ .project $)/terraform/($ .environment $)/*
+      - ($ .config_root $)/terraform/*
 
 jobs:
-
 # Merge and trigger a plan whenever there is a commit in Terraform stack or config
 - name: terraform-plan
   serial: True
   max_in_flight: 1
   build_logs_to_retain: 10
   plan:
-    - do:
-      - get: git_stack-terraform
-        trigger: true
-      - get: git_config-terraform
-        trigger: true
+  - do:
+    - get: git_stack-terraform
+      trigger: true
+    - get: git_config-terraform
+      trigger: true
 
-      - task: merge-stack-and-config
-        config:
-          <<: *merge-stack-and-config
-          inputs:
-          - name: git_config-terraform
-            path: "config"
-          - name: git_stack-terraform
-            path: "stack"
-        params:
-          CONFIG_PATH: ($ .project $)/terraform/($ .environment $)
-          STACK_PATH: terraform/($ $stack_path $)
+    - task: merge-stack-and-config
+      config:
+      <<: *merge-stack-and-config
+      inputs:
+      - name: git_config-terraform
+        path: "config"
+      - name: git_stack-terraform
+        path: "stack"
+      params:
+        CONFIG_PATH: ($ .config_root $)/terraform/
+        STACK_PATH: terraform/($ $stack_path $)
 
-      - put: tfstate
-        params:
-          plan_only: true
-          terraform_source: merged-stack/
+    - put: tfstate
+      params:
+        plan_only: true
+        terraform_source: merged-stack/
 
 # Merge and trigger an apply manually (no autostart of this job)
 - name: terraform-apply
@@ -226,7 +226,7 @@ jobs:
             - name: git_stack-terraform
               path: "stack"
           params:
-            CONFIG_PATH: ($ .project $)/terraform/($ .environment $)
+            CONFIG_PATH: ($ .config_root $)/terraform/
             STACK_PATH: terraform/($ $stack_path $)
 
         - put: tfstate

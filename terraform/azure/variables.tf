@@ -1,14 +1,18 @@
 # Cycloid requirements
-variable "project" {
-  description = "Cycloid project name."
+variable "component" {
+  description = "Cycloid component canonical."
 }
 
 variable "env" {
-  description = "Cycloid environment name."
+  description = "Cycloid environment canonical."
 }
 
-variable "customer" {
-  description = "Cycloid customer name."
+variable "project" {
+  description = "cycloid project canonical."
+}
+
+variable "org" {
+  description = "Cycloid org canonical."
 }
 
 # Azure
