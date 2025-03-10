@@ -76,8 +76,8 @@ resources:
       container_name: ((terraform_storage_container_name))
       key: ((terraform_storage_container_path))/($ $tfPrefix $).tfstate
       resource_group_name: ((terraform_resource_group_name))
-      storage_account_name: ((terraform_storage_account_name))
-      access_key: ((terraform_storage_access_key))
+      storage_account_name: ((terraform_storage_account.account_name))
+      access_key: ((terraform_storage_account.access_key))
     vars:
       azure_location: ((azure_location))
       azure_env: ((azure_env))
@@ -99,7 +99,7 @@ resources:
     backend_type: gcs
     backend_config:
       bucket: ((terraform_storage_bucket_name))
-      prefix: ($ .org $)/($ .project $)/($ .env $)
+      prefix: ($ .org $)/($ .project $)/($ .env $)/($ .component $)
       credentials: ((gcp_credentials_json))
     vars:
       gcp_project: ((gcp_project))

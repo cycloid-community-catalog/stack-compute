@@ -527,30 +527,27 @@ use_cases:
         widget: simple_text
         type: string
         default: ($ .organization_canonical $)-terraform
-      - name: "Azure Storage Account name"
+      - name: "Azure Storage Account"
         description: "Azure Storage Account name to use to store terraform remote state file."
-        key: terraform_storage_account_name
+        key: terraform_storage_account
         widget: cy_cred
+        widget_config:
+          cred_types: [azure_storage]
+          show_keys: false
         type: string
         default: ((azure_storage_aks.account_name))
-      - name: "Azure Storage Account key"
-        description: "Azure Storage Account key to use to store terraform remote state file."
-        key: terraform_storage_access_key
-        widget: cy_cred
-        type: string
-        default: ((azure_storage_aks.access_key))
       - name: "Azure Storage container name"
         description: "Azure Storage container name to store terraform remote state file."
         key: terraform_storage_container_name
         widget: simple_text
         type: string
-        default: ($ .organization_canonical $)
+        default: ($ .org $)
       - name: "Azure Storage container path"
         description: "Azure Storage container path to store terraform remote state file."
         key: terraform_storage_container_path
         widget: simple_text
         type: string
-        default: ($ .project $)/($ .environment $)
+        default: ($ .project $)/($ .env $)/($ .component $)
       - name: "OS Admin Password"
         description: "The password associated with the local admin account. Must be [6-72] and contain uppercase + lowercase + number + special caracter"
         key: os_admin_password
