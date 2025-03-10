@@ -526,7 +526,7 @@ use_cases:
         key: terraform_resource_group_name
         widget: simple_text
         type: string
-        default: ($ .organization_canonical $)-terraform
+        default: ($ .org $)-terraform
       - name: "Azure Storage Account"
         description: "Azure Storage Account name to use to store terraform remote state file."
         key: terraform_storage_account
@@ -535,7 +535,7 @@ use_cases:
           cred_types: [azure_storage]
           display_keys: false
         type: string
-        default: ((azure_storage_aks.account_name))
+        default: ((azure_storage_aks))
       - name: "Azure Storage container name"
         description: "Azure Storage container name to store terraform remote state file."
         key: terraform_storage_container_name
