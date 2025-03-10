@@ -639,8 +639,9 @@ use_cases:
       - name: "OS Admin Name"
         description: "Specifies the name of the local admin account."
         key: module.vm.os_admin_username
-        widget: cy_cred
+        widget: simple_text
         type: string
+        default: admin
         required: true
       - name: "Disable password authentication"
         description: "Specifies whether password authentication should be disabled."
