@@ -533,7 +533,7 @@ use_cases:
         widget: cy_cred
         widget_config:
           cred_types: [azure_storage]
-          show_keys: false
+          display_keys: false
         type: string
         default: ((azure_storage_aks.account_name))
       - name: "Azure Storage container name"
