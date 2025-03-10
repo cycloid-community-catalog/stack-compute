@@ -48,7 +48,7 @@ resources:
   icon: terraform
   source:
     env_name: ($ .env $)
-($- $tfPrefix := list .project .env .component | join "-" $)
+# ($- $tfPrefix := list .project .env .component | join "-" $)
 ($- if eq .use_case "aws-ec2" $)
     backend_type: s3
     backend_config:
@@ -92,9 +92,9 @@ resources:
       org: ($ .org $)
     env:
       ARM_CLIENT_ID: ((azure_credential.client_id))
-    	ARM_CLIENT_SECRET: ((azure_credential.client_secret))
-    	ARM_TENANT_ID: ((azure_credential.tenant_id))
-    	ARM_SUBSCRIPTION_ID: ((azure_credential.subscription_id))
+      ARM_CLIENT_SECRET: ((azure_credential.client_secret))
+      ARM_TENANT_ID: ((azure_credential.tenant_id))
+      ARM_SUBSCRIPTION_ID: ((azure_credential.subscription_id))
 ($- else if eq .use_case "gcp-gce" $)
     backend_type: gcs
     backend_config:
