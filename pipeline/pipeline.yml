@@ -79,13 +79,13 @@ resources:
       storage_account_name: ((terraform_storage_account.account_name))
       access_key: ((terraform_storage_account.access_key))
     vars:
-      azure_location: ((azure_location))
-      azure_env: ((azure_env))
-      azure_client_id: ((azure_credential.client_id))
-      azure_client_secret: ((azure_credential.client_secret))
-      azure_subscription_id: ((azure_credential.subscription_id))
-      azure_tenant_id: ((azure_credential.tenant_id))
-      os_admin_password: ((os_admin_password))
+      azure_location: "((azure_location))"
+      azure_env: "((azure_env))"
+      azure_client_id: "((azure_credential.client_id))"
+      azure_client_secret: "((azure_credential.client_secret))"
+      azure_subscription_id: "((azure_credential.subscription_id))"
+      azure_tenant_id: "((azure_credential.tenant_id))"
+      os_admin_password: "((os_admin_password))"
       component: ($ .component $)
       env: ($ .env $)
       project: ($ .project $)
