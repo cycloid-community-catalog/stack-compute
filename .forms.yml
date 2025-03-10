@@ -494,38 +494,14 @@ use_cases:
     - name: Terraform
       technologies: [pipeline]
       vars:
-      - name: "Azure Subscription ID"
-        description: "Azure subscription ID to use for Terraform."
-        key: azure_subscription_id
+      - name: "Azure Credential"
+        description: "Azure credential to use for Terraform."
+        key: azure_credential
         widget: cy_cred
         widget_config:
           cred_types: [azure]
         type: string
-        default: "((azure_admin.subscription_id))"
-      - name: "Azure Tenant ID"
-        description: "Azure Tenant ID to use for Terraform."
-        key: azure_tenant_id
-        widget: cy_cred
-        widget_config:
-          cred_types: [azure]
-        type: string
-        default: "((azure_admin.tenant_id))"
-      - name: "Azure Client ID"
-        description: "Azure Client ID to use for Terraform."
-        key: azure_client_id
-        widget: cy_cred
-        widget_config:
-          cred_types: [azure]
-        type: string
-        default: "((azure_admin.client_id))"
-      - name: "Azure Client Secret"
-        description: "Azure Client Secret to use for Terraform."
-        key: azure_client_secret
-        widget: cy_cred
-        widget_config:
-          cred_types: [azure]
-        type: string
-        default: "((azure_admin.client_secret))"
+        default: "((azure_admin))"
       - name: "Azure Environment"
         description: "Azure environment to use for Terraform."
         key: azure_env

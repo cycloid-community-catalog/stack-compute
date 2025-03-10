@@ -81,20 +81,20 @@ resources:
     vars:
       azure_location: ((azure_location))
       azure_env: ((azure_env))
-      azure_client_id: ((azure_client_id))
-      azure_client_secret: ((azure_client_secret))
-      azure_subscription_id: ((azure_subscription_id))
-      azure_tenant_id: ((azure_tenant_id))
+      azure_client_id: ((azure_credential.client_id))
+      azure_client_secret: ((azure_credential.client_secret))
+      azure_subscription_id: ((azure_credential.subscription_id))
+      azure_tenant_id: ((azure_credential.tenant_id))
       os_admin_password: ((os_admin_password))
       component: ($ .component $)
       env: ($ .env $)
       project: ($ .project $)
       org: ($ .org $)
     env:
-      ARM_CLIENT_ID: ((azure_client_id))
-    	ARM_CLIENT_SECRET: ((azure_client_secret))
-    	ARM_TENANT_ID: ((azure_tenant_id))
-    	ARM_SUBSCRIPTION_ID: ((azure_subscription_id))
+      ARM_CLIENT_ID: ((azure_credential.client_id))
+    	ARM_CLIENT_SECRET: ((azure_credential.client_secret))
+    	ARM_TENANT_ID: ((azure_credential.tenant_id))
+    	ARM_SUBSCRIPTION_ID: ((azure_credential.subscription_id))
 ($- else if eq .use_case "gcp-gce" $)
     backend_type: gcs
     backend_config:
