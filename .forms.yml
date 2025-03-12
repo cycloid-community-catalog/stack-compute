@@ -7,29 +7,22 @@ use_cases:
     - name: Terraform
       technologies: [pipeline]
       vars:
-      - name: "AWS access key"
+      - name: "AWS credentials"
         description: "Amazon AWS access key for Terraform."
-        key: aws_access_key
+        key: aws_credential
         widget: cy_cred
         widget_config:
           cred_types: [aws]
+          display_keys: false
         type: string
-        default: "((aws.access_key))"
-      - name: "AWS secret key"
-        description: "Amazon AWS secret key for Terraform."
-        key: aws_secret_key
-        widget: cy_cred
-        widget_config:
-          cred_types: [aws]
-        type: string
-        default: "((aws.secret_key))"
+        default: "((aws))"
       - name: "Amazon AWS region"
         description: "Amazon AWS region to use for Terraform."
         key: aws_default_region
         widget: auto_complete
         type: string
         values: ["eu-north-1","ap-south-1","eu-west-3","eu-west-2","eu-west-1","ap-northeast-2","ap-northeast-1","sa-east-1","ca-central-1","ap-southeast-1","ap-southeast-2","eu-central-1","us-east-1","us-east-2","us-west-1","us-west-2"]
-        default: eu-west-1
+        default: eu-west-3
       - name: "Terraform storage bucket"
         description: "AWS S3 bucket name to store terraform remote state file."
         key: terraform_storage_bucket_name
@@ -139,6 +132,7 @@ use_cases:
         key: module.vm.instance_extra_tags
         widget: text_area
         type: map
+
     - name: Network
       technologies: [terraform]
       vars:
@@ -168,6 +162,7 @@ use_cases:
         widget: switch
         type: boolean
         default: true
+
     - name: Volume
       technologies: [terraform]
       vars:
@@ -216,6 +211,7 @@ use_cases:
         key: module.vm.volume_extra_tags
         widget: text_area
         type: map
+
     - name: Security
       technologies: [terraform]
       vars:
