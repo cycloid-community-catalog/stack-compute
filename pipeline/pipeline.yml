@@ -1,6 +1,5 @@
 # YAML anchors
 shared:
-
   # Task : sync and merge with rsync 2 rep. Used to merge stack and config
   - &merge-stack-and-config
     platform: linux
@@ -142,61 +141,61 @@ jobs:
   max_in_flight: 1
   build_logs_to_retain: 10
   plan:
-    - do:
-      - get: git_stack-terraform
-        trigger: false
-        passed:
-          - terraform-plan
-      - get: git_config-terraform
-        trigger: false
-        passed:
-          - terraform-plan
-      - get: tfstate
-        trigger: false
-        passed:
-          - terraform-plan
+  - do:
+    - get: git_stack-terraform
+      trigger: false
+      passed:
+      - terraform-plan
+    - get: git_config-terraform
+      trigger: false
+      passed:
+      - terraform-plan
+    - get: tfstate
+      trigger: false
+      passed:
+      - terraform-plan
 
-      - task: merge-stack-and-config
-        config:
-          <<: *merge-stack-and-config
-          inputs:
-          - name: git_config-terraform
-            path: "config"
-          - name: git_stack-terraform
-            path: "stack"
-        params:
-          CONFIG_PATH: ($ .project $)/terraform/($ .environment $)
-          STACK_PATH: terraform/($ $stack_path $)
+    - task: merge-stack-and-config
+      config:
+        <<: *merge-stack-and-config
+        inputs:
+        - name: git_config-terraform
+          path: "config"
+        - name: git_stack-terraform
+          path: "stack"
+      params:
+        CONFIG_PATH: ($ .project $)/terraform/($ .environment $)
+        STACK_PATH: terraform/($ $stack_path $)
 
-      - put: tfstate
-        params:
-          plan_run: true
-          terraform_source: merged-stack/
+    - put: tfstate
+      params:
+        plan_run: true
+        terraform_source: merged-stack/
 
 - name: terraform-destroy
   max_in_flight: 1
   build_logs_to_retain: 10
   plan:
-    - do:
-        - get: git_stack-terraform
-          trigger: false
-        - get: git_config-terraform
-          trigger: false
-        - task: merge-stack-and-config
-          config:
-            <<: *merge-stack-and-config
-            inputs:
-            - name: git_config-terraform
-              path: "config"
-            - name: git_stack-terraform
-              path: "stack"
-          params:
-            CONFIG_PATH: ($ .config_root $)/terraform/
-            STACK_PATH: terraform/($ $stack_path $)
+  - do:
+    - get: git_stack-terraform
+      trigger: false
+    - get: git_config-terraform
+      trigger: false
+    - task: merge-stack-and-config
+      config:
+        <<: *merge-stack-and-config
+        inputs:
+        - name: git_config-terraform
+          path: "config"
+        - name: git_stack-terraform
+          path: "stack"
+      params:
+        CONFIG_PATH: ($ .config_root $)/terraform/
+        STACK_PATH: terraform/($ $stack_path $)
 
-        - put: tfstate
-          params:
-            action: destroy
-            terraform_source: merged-stack/
-          get_params:
-            action: destroy
+    - put: tfstate
+      params:
+        action: destroy
+        terraform_source: merged-stack/
+      get_params:
+        action: destroy
