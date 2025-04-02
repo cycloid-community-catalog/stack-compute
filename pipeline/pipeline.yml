@@ -58,9 +58,9 @@ resources:
       org: ($ .org $)
 ($- if eq .use_case "aws-ec2" $)
     env:
-      AWS_ACCESS_KEY_ID: ((((aws_credential)).access_key))
-      AWS_SECRET_ACCESS_KEY: ((((aws_credential)).secret_key))
-      AWS_DEFAULT_REGION: ((aws_default_region))
+      AWS_ACCESS_KEY_ID: "((((aws_credential)).access_key))"
+      AWS_SECRET_ACCESS_KEY: "((((aws_credential)).secret_key))"
+      AWS_DEFAULT_REGION: "((aws_default_region))"
 ($- else if eq .use_case "azure-linux" $)
       azure_location: "((azure_location))"
       azure_env: "((azure_env))"
@@ -70,13 +70,13 @@ resources:
       azure_tenant_id: "((azure_credential.tenant_id))"
       os_admin_password: "((os_admin_password))"
 ($- else if eq .use_case "gcp-gce" $)
-      gcp_project: ((gcp_project))
-      gcp_region: ((gcp_region))
+      gcp_project: "((gcp_project))"
+      gcp_region: "((gcp_region))"
     env:
-      GOOGLE_PROJECT: ((gcp_project))
-      GOOGLE_REGION: ((gcp_region))
-      GOOGLE_ZONE: ((gcp_zone))
-      GOOGLE_CREDENTIALS: ((gcp_credentials_json))
+      GOOGLE_PROJECT: "((gcp_project))"
+      GOOGLE_REGION: "((gcp_region))"
+      GOOGLE_ZONE: "((gcp_zone))"
+      GOOGLE_CREDENTIALS: "((gcp_credentials_json))"
 ($- end $)
 
 # The Terraform stack (will be merged with the config)
